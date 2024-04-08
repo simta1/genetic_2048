@@ -301,9 +301,11 @@ class Game {
 
         // check and draw game over screen
         if (this.gameover) {
+            // background of game over screen
             fill(255, 200);
             rect(0, 0, totalLength, totalLength, curv, curv, curv, curv);
             
+            // print game over message
             fill(0, 100); textSize(30); textAlign(CENTER, CENTER);
             text("gameover", totalLength / 2, totalLength / 2);
         }
