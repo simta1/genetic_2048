@@ -3,11 +3,15 @@ let game;
 let agent;
 let agentActivated;
 
+// agent
+const agentPedictDepth = 3;
+const agentRepeatLimit = 20;
+
 // design
 const margin = 4;
-const length = 45;
+const cellLength = 45;
 const curv = 3; // curvature
-let totalLength;
+let boardLength;
 
 function setup() {
     // get size from URL
@@ -17,12 +21,33 @@ function setup() {
     else size = 4; // default
 
     // calculate total length of game screen
-    totalLength = margin + (length + margin) * size;
-    createCanvas(totalLength, totalLength + 10);
+    boardLength = margin + (cellLength + margin) * size;
+    createCanvas(boardLength, boardLength + 10);
+    
+    // make weights for agent
+    let weights = new Array(size * size).fill(0);
+    let weight = 1;
+    for (let i = 0; i < size; i++) {
+        if (i & 1) {
+            for (let j = size - 1; j >= 0; j--) {
+                let idx = size * i + j;
+                weights[idx] = weight;
+                weight = (weight << 1) + 1;
+            }
+        }
+        else {
+            for (let j = 0; j < size; j++) {
+                let idx = size * i + j;
+                weights[idx] = weight;
+                weight = (weight << 1) + 1;
+            }
+        }
+    }
+    print(weights);
 
     // make game and agent
     game = new Game();
-    agent = new Agent(3, 20);
+    agent = new Agent(weights, agentPedictDepth, agentRepeatLimit);
     agentActivated = false;
 
     // scrollbar
@@ -49,7 +74,7 @@ function setup() {
 }
 
 function draw() {
-    background(220);
+    background(255);
     game.run();
     game.show();
     if (agentActivated) agent.run(game);
@@ -64,12 +89,3 @@ function keyPressed() {
     else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
     else if (keyCode == BACKSPACE) game.applyMove(Move.UNDO);
 }
-
-const Move = {
-    UP: 'up',
-    DOWN: 'down',
-    LEFT: 'left',
-    RIGHT: 'right',
-    UNDO : 'undo'
-};
-Object.freeze(Move);

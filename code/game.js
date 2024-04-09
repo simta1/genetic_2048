@@ -26,6 +26,15 @@ class Position {
     }
 }
 
+const Move = {
+    UP: 'up',
+    DOWN: 'down',
+    LEFT: 'left',
+    RIGHT: 'right',
+    UNDO : 'undo'
+};
+Object.freeze(Move);
+
 class Game {
     constructor() {
         this.prevBoard = new Array(size).fill(0).map(() => new Array(size).fill(0));
@@ -257,15 +266,15 @@ class Game {
 
         // draw background of game board
         fill('rgb(187, 173, 160)');
-        rect(0, 0, totalLength, totalLength, curv, curv, curv, curv);
+        rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
 
         // draw background of each room
         fill('rgb(204, 192, 179)');
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                let x = margin + (length + margin) * j;
-                let y = margin + (length + margin) * i;
-                rect(x, y, length, length, curv, curv, curv, curv);
+                let x = margin + (cellLength + margin) * j;
+                let y = margin + (cellLength + margin) * i;
+                rect(x, y, cellLength, cellLength, curv, curv, curv, curv);
             }
         }
 
@@ -274,14 +283,14 @@ class Game {
             for (let j = 0; j < size; j++) {
                 if (this.curBoard[i][j] == 0) continue;
 
-                let x = margin + (length + margin) * j;
-                let y = margin + (length + margin) * i;
+                let x = margin + (cellLength + margin) * j;
+                let y = margin + (cellLength + margin) * i;
 
                 if (this.applyMoveTimer.isWorking()) {
                     let {i : mi, j : mj} = this.movedPos[i][j];
                     let rate = this.applyMoveTimer.elapsedRate();
-                    x = margin + (length + margin) * map(rate, 0, 1, j, mj);
-                    y = margin + (length + margin) * map(rate, 0, 1, i, mi);
+                    x = margin + (cellLength + margin) * map(rate, 0, 1, j, mj);
+                    y = margin + (cellLength + margin) * map(rate, 0, 1, i, mi);
                 }
                 
                 // draw background of each number
@@ -291,11 +300,11 @@ class Game {
 
                 if (this.newNumberTimer.isWorking() && i == this.newi && j == this.newj) {
                     rectMode(CENTER);
-                    let newNumberLength = length * this.newNumberTimer.elapsedRate();
-                    rect(x + length / 2, y + length / 2, newNumberLength, newNumberLength, 3, 3, 3, 3);
+                    let newNumberLength = cellLength * this.newNumberTimer.elapsedRate();
+                    rect(x + cellLength / 2, y + cellLength / 2, newNumberLength, newNumberLength, 3, 3, 3, 3);
                     rectMode(CORNER);
                 }
-                else rect(x, y, length, length, curv, curv, curv, curv);
+                else rect(x, y, cellLength, cellLength, curv, curv, curv, curv);
 
                 // draw number (text)
                 if (this.curBoard[i][j] < 5) fill('rgb(119,110,101)');
@@ -310,23 +319,23 @@ class Game {
                 else textSize(11);
                 
                 textAlign(CENTER, CENTER);
-                text(this.curBoard[i][j], x + length / 2, y + length / 2 + 1);
+                text(this.curBoard[i][j], x + cellLength / 2, y + cellLength / 2 + 1);
             }
         }
         
         // print score and time
         fill(0); textSize(10); textAlign(LEFT, CENTER);
-        text("SCORE : " + this.curScore + ", TIME : " + this.time.toFixed(2) + "s", 0, totalLength + 5);
+        text("SCORE : " + this.curScore + ", TIME : " + this.time.toFixed(2) + "s", 0, boardLength + 5);
 
         // check and draw game over screen
         if (this.gameover) {
             // background of game over screen
             fill(255, 200);
-            rect(0, 0, totalLength, totalLength, curv, curv, curv, curv);
+            rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
             
             // print game over message
             fill(0, 100); textSize(30); textAlign(CENTER, CENTER);
-            text("gameover", totalLength / 2, totalLength / 2);
+            text("gameover", boardLength / 2, boardLength / 2);
         }
     }
 }

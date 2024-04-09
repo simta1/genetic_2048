@@ -12,3 +12,12 @@ html, body {
 canvas {
   display: block;
 }
+
+a {
+  /* text-decoration: none; */
+  color: #007BFF;
+}
+
+a:hover {
+  color: #00B7FF;
+}

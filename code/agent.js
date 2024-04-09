@@ -1,25 +1,6 @@
 class Agent {
-    constructor(predictDepth, repeatLimit) {
-        this.weights = new Array(size * size).fill(0);
-        let weight = 1;
-        for (let i = 0; i < size; i++) {
-            if (i & 1) {
-                for (let j = size - 1; j >= 0; j--) {
-                    let idx = size * i + j;
-                    this.weights[idx] = weight;
-                    weight = (weight << 1) + 1;
-                }
-            }
-            else {
-                for (let j = 0; j < size; j++) {
-                    let idx = size * i + j;
-                    this.weights[idx] = weight;
-                    weight = (weight << 1) + 1;
-                }
-            }
-        }
-        print(this.weights);
-
+    constructor(weights, predictDepth, repeatLimit) {
+        this.weights = weights;
         this.predictDepth = predictDepth;
         this.repeatLimit = repeatLimit; // number of checking makeNewNumber
     }
