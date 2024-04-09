@@ -1,8 +1,10 @@
 let game;
+let agent;
 
 function setup() {
     createCanvas(400, 400);
     game = new Game();
+    agent = new Agent();
 }
 
 function draw() {
@@ -16,6 +18,7 @@ function keyPressed() {
     else if (keyCode == DOWN_ARROW) game.applyMove(Move.DOWN);
     else if (keyCode == LEFT_ARROW) game.applyMove(Move.LEFT);
     else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
+    else if (key == 'x') agent.run(game);
 }
 
 const Move = {
