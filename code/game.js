@@ -1,7 +1,3 @@
-const size = 4;
-const moveAnimationDuration = 5;
-const newNumberAnimationDuration = 5;
-
 const numberColors = [
     'rgb(204, 192, 179)', // X
     'rgb(238, 228, 218)', // 2
@@ -42,13 +38,21 @@ class Game {
 
         // applyMove
         this.inputBuffer = [];
-        this.applyMoveTimer = new Timer(moveAnimationDuration);
+        this.applyMoveTimer = new Timer();
         this.movedPos = new Array(size).fill(0).map(() => new Array(size).fill(new Position(0, 0)));
 
         // make new number
-        this.newNumberTimer = new Timer(newNumberAnimationDuration);
+        this.newNumberTimer = new Timer();
         this.makeNewNumber();
         this.makeNewNumber();
+    }
+
+    setMoveAnimationDuration(duration) {
+        this.applyMoveTimer.setDuration(duration);
+    }
+
+    setNewNumberAnimationDuration(duration) {
+        this.newNumberTimer.setDuration(duration);
     }
 
     makeNewNumber() {
@@ -230,10 +234,6 @@ class Game {
     }
 
     show() {
-        let margin = 4;
-        let length = 45;
-        let totalLength = margin + (length + margin) * size;
-        let curv = 3; // curvature
         noStroke();
 
         // draw background of game board

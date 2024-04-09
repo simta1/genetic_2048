@@ -1,5 +1,5 @@
 class Timer {
-    constructor(duration) {
+    constructor(duration=0) {
         this.duration = duration;
         this.isOn = false;
     }
@@ -25,5 +25,9 @@ class Timer {
 
     elapsedRate() {
         return this.elapsedTime / this.duration;
+    }
+
+    setDuration(duration) {
+        this.duration = duration;
     }
 }

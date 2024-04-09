@@ -1,23 +1,42 @@
-let predictDepth = 4;
-
 class Agent {
-    constructor() {
-        // this.weight = new Array(size * size).fill(0);
-        this.weight = [1, 3, 7, 15, 255, 127, 63, 31, 511, 1023, 2047, 4095, 65535, 32767, 16383, 8191]; 
-        this.iter = 6; // number of checking makeNewNumber
+    constructor(predictDepth, repeatLimit) {
+        this.weights = new Array(size * size).fill(0);
+        let weight = 1;
+        for (let i = 0; i < size; i++) {
+            if (i & 1) {
+                for (let j = size - 1; j >= 0; j--) {
+                    let idx = size * i + j;
+                    this.weights[idx] = weight;
+                    weight = (weight << 1) + 1;
+                }
+            }
+            else {
+                for (let j = 0; j < size; j++) {
+                    let idx = size * i + j;
+                    this.weights[idx] = weight;
+                    weight = (weight << 1) + 1;
+                }
+            }
+        }
+        print(this.weights);
+
+        this.predictDepth = predictDepth;
+        this.repeatLimit = repeatLimit; // number of checking makeNewNumber
     }
 
     run(game) {
+        if (game.gameover || game.applyMoveTimer.isWorking() || game.newNumberTimer.isWorking()) return;
+        
         let board = game.curBoard.reduce((acc, cur) => acc.concat(cur), []); // flatten 2D array
         let bestMove = this.findBestMove(board);
         game.applyMove(bestMove);
     }
 
     findBestMove(board, depth=0) {
-        if (depth == predictDepth) return this.evaluate(board);
+        if (depth == this.predictDepth) return this.evaluate(board);
 
         let bestScore = -Infinity;
-        let bestMove;
+        let bestMove = 0;
         
         let possibleMoves = [Move.UP, Move.LEFT, Move.DOWN, Move.RIGHT];
         for (let move of possibleMoves) {
@@ -26,7 +45,7 @@ class Agent {
 
             let worstPossibleScore = Infinity;
 
-            for (let i = 0; i < this.iter; i++) {
+            for (let i = 0; i < this.repeatLimit; i++) {
                 let nextBoard = this.makeNewNumber(pushed);
                 let curScore = this.findBestMove(nextBoard, depth + 1);
                 worstPossibleScore = min(worstPossibleScore, curScore);
@@ -39,7 +58,10 @@ class Agent {
         }
         
         if (depth) return bestScore;
-        return bestMove;
+        if (bestMove !== 0) return bestMove;
+        
+        print("random move selected");
+        return possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
     }
     
     checkArraysEqual(a, b) {
@@ -51,7 +73,7 @@ class Agent {
 
     evaluate(board) {
         let score = 0;
-        for (let i = 0; i < size * size; i++) score += this.weight[i] * board[i];
+        for (let i = 0; i < size * size; i++) score += this.weights[i] * board[i];
         return score;
     }
 

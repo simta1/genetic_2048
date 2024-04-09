@@ -13,9 +13,38 @@
   </head>
 
   <body>
+    <h2>add URL parameter 'size' to change size of game board.</h2>
+    </br></br>
+
+    <div>
+      <label for="moveAnimationScrollbar">Pushing Animation Duration: <span id="moveAnimationDuration"></span></label>
+      <input type="range" min="0" max="100" value="5" id="moveAnimationScrollbar">
+    </div>
+    <div>
+      <label for="newNumberAnimationScrollbar">Creating Animation Duration: <span id="newNumberAnimationDuration"></span></label>
+      <input type="range" min="0" max="100" value="5" id="newNumberAnimationScrollbar">
+    </div>
+    </br><div>
+      <label for="toggleBotCheckbox">Activate Bot</label>
+      <input type="checkbox" id="toggleBotCheckbox">
+    </div></br>
+
     <script src="code/agent.js"></script>
     <script src="code/game.js"></script>
     <script src="code/main.js"></script>
     <script src="code/timer.js"></script>
+    <script>
+      window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sizeParam = urlParams.get('size');
+        if (!sizeParam) {
+          var url = window.location.href;
+          if (url.indexOf('?') !== -1) url += '&size=4';
+          else url += '?size=4';
+          window.location.href = url;
+        }
+      };
+    </script>
+  </div>
   </body>
 </html>
