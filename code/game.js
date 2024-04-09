@@ -32,8 +32,13 @@ class Game {
         this.curBoard = new Array(size).fill(0).map(() => new Array(size).fill(0));
         this.nextBoard = new Array(size).fill(0).map(() => new Array(size).fill(0));
 
+        this.prevScore = 0;
+        this.curScore = 0;
+        this.nextScore = 0;
+
+        this.canUndo = false;
+
         this.time = 0;
-        this.score = 0;
         this.gameover = false;
 
         // applyMove
@@ -82,7 +87,14 @@ class Game {
 
         // update curBoard and makeNewNumber after move animation ends
         if (this.applyMoveTimer.work()) {
+            this.prevBoard = this.curBoard;
             this.curBoard = this.nextBoard;
+
+            this.prevScore = this.curScore;
+            this.curScore = this.nextScore;
+
+            this.canUndo = true;
+
             this.makeNewNumber();
         }
         
@@ -131,6 +143,7 @@ class Game {
         }
 
         this.nextBoard = this.curBoard.slice();
+        this.nextScore = this.curScore;
         let tmp;
 
         switch (move) {
@@ -176,10 +189,16 @@ class Game {
                 }
             }
             break;
+        
+        case Move.UNDO:
+            this.curBoard = this.prevBoard;
+            this.curScore = this.prevScore;
+            this.canUndo = false;
+            break;
         }
 
         // move animation start
-        if (!this.checkArraysEqual(this.curBoard, this.nextBoard)) this.applyMoveTimer.start();
+        if (move != Move.UNDO && !this.checkArraysEqual(this.curBoard, this.nextBoard)) this.applyMoveTimer.start();
     }
 
     checkArraysEqual(a, b) {
@@ -218,7 +237,7 @@ class Game {
                 if (stack.length && stack[stack.length - 1].num == num && stack[stack.length - 1].canMerge) {
                     stack[stack.length - 1].num <<= 1;
                     stack[stack.length - 1].canMerge = false;
-                    this.score += stack[stack.length - 1].num;
+                    this.nextScore += stack[stack.length - 1].num;
                 }
                 else stack.push(new Data(num));
                 
@@ -297,7 +316,7 @@ class Game {
         
         // print score and time
         fill(0); textSize(10); textAlign(LEFT, CENTER);
-        text("SCORE : " + this.score + ", TIME : " + this.time.toFixed(2) + "s", 0, totalLength + 5);
+        text("SCORE : " + this.curScore + ", TIME : " + this.time.toFixed(2) + "s", 0, totalLength + 5);
 
         // check and draw game over screen
         if (this.gameover) {

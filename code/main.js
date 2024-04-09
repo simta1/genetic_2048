@@ -62,12 +62,14 @@ function keyPressed() {
     else if (keyCode == DOWN_ARROW) game.applyMove(Move.DOWN);
     else if (keyCode == LEFT_ARROW) game.applyMove(Move.LEFT);
     else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
+    else if (keyCode == BACKSPACE) game.applyMove(Move.UNDO);
 }
 
 const Move = {
     UP: 'up',
     DOWN: 'down',
     LEFT: 'left',
-    RIGHT: 'right'
+    RIGHT: 'right',
+    UNDO : 'undo'
 };
 Object.freeze(Move);
