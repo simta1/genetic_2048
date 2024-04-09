@@ -4,7 +4,7 @@ class Agent {
     constructor() {
         // this.weight = new Array(size * size).fill(0);
         this.weight = [1, 3, 7, 15, 255, 127, 63, 31, 511, 1023, 2047, 4095, 65535, 32767, 16383, 8191]; 
-        this.iter = 6; // makeNewNumber 횟수
+        this.iter = 6; // number of checking makeNewNumber
     }
 
     run(game) {
