@@ -27,7 +27,7 @@ class Individual {
     init(chromosome) {
         this.chromosome = chromosome;
         this.game = new Game();
-        this.agent = new Agent(this.chromosome, agentPedictDepth, agentRepeatLimit);
+        this.agent = new Agent(this.chromosome);
     }
 
     show() {
