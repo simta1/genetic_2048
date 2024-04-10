@@ -4,6 +4,13 @@ class Agent {
         this.predictDepth = predictDepth;
         this.repeatLimit = repeatLimit; // number of checking makeNewNumber
         this.undoThreshold = undoThreshold; // if less then 1, bot repeat undo forever
+
+        // block to repeat undo forever
+        this.prevPrevMove = null;
+        this.prevMove = null;
+        this.repeatedUndoCnt = 0;
+        this.blockRepeatUndo = false;
+        this.debugMode = false;
     }
 
     setPredictDepth(predictDepth) {
@@ -20,19 +27,36 @@ class Agent {
         let board = game.curBoard.reduce((acc, cur) => acc.concat(cur), []); // flatten 2D array
         let [bestScore, bestMove] = this.findBestMove(board, this.predictDepth);
         
-        if (game.canUndo) {
+        if (game.canUndo && !this.blockRepeatUndo) {
             let prevBoard = game.prevBoard.reduce((acc, cur) => acc.concat(cur), []); // flatten 2D array
             let [undoBestScore, _] = this.findBestMove(prevBoard, this.predictDepth - 1);
             if (undoBestScore / bestScore > this.undoThreshold) bestMove = Move.UNDO;
         }
 
         if (bestMove === -1) {
-            let possibleMoves = [Move.UP, Move.LEFT, Move.DOWN, Move.RIGHT, Move.UNDO];
+            let possibleMoves = [Move.UP, Move.LEFT, Move.DOWN, Move.RIGHT];
             bestMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
             print("random move selected : ", bestMove);
         }
-        
         game.applyMove(bestMove);
+
+        // block to repeat undo forever
+        if (bestMove == Move.UNDO) {
+            if (this.prevPrevMove == Move.UNDO) {
+                if (++this.repeatedUndoCnt >= 100) {
+                    this.blockRepeatUndo = true;
+                    if (this.debugMode) print("blocked");
+                }
+            }
+        }
+        if (bestMove != Move.UNDO && this.prevMove != Move.UNDO) {
+            this.repeatedUndoCnt = 0;
+        }
+
+        if (this.debugMode) print(bestMove, this.repeatedUndoCnt);
+        
+        this.prevPrevMove = this.prevMove;
+        this.prevMove = bestMove;
     }
 
     findBestMove(board, depth) {
