@@ -13,7 +13,7 @@ class Agent {
         if (game.gameover || game.applyMoveTimer.isWorking() || game.newNumberTimer.isWorking()) return;
         
         let board = game.curBoard.reduce((acc, cur) => acc.concat(cur), []); // flatten 2D array
-        let bestMove = this.findBestMove(board);
+        let [bestScore, bestMove] = this.findBestMove(board);
         game.applyMove(bestMove);
     }
 
@@ -43,7 +43,7 @@ class Agent {
         }
         
         if (depth) return bestScore;
-        if (bestMove !== 0) return bestMove;
+        if (bestMove !== 0) return [bestScore, bestMove];
         
         print("random move selected");
         return possibleMoves[Math.floor(Math.random() * possibleMoves.length)];

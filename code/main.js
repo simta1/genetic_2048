@@ -66,6 +66,7 @@ function setup() {
     });
     newScb.dispatchEvent(new Event('input'));
 
+    // scrollbar
     let agentScb = document.getElementById('agentPredictDepthScrollbar');
     agentScb.addEventListener('input', function() {
         agent.setPredictDepth(this.value);
