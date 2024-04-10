@@ -5,6 +5,10 @@ class Agent {
         this.repeatLimit = repeatLimit; // number of checking makeNewNumber
     }
 
+    setPredictDepth(predictDepth) {
+        this.predictDepth = predictDepth;
+    }
+
     run(game) {
         if (game.gameover || game.applyMoveTimer.isWorking() || game.newNumberTimer.isWorking()) return;
         

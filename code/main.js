@@ -3,10 +3,6 @@ let game;
 let agent;
 let agentActivated;
 
-// agent
-const agentPedictDepth = 1;
-const agentRepeatLimit = 20;
-
 // design
 const margin = 4;
 const cellLength = 45;
@@ -45,8 +41,12 @@ function setup() {
     }
     print(weights);
 
-    // make game and agent
+    // game
     game = new Game();
+
+    // agent
+    const agentPedictDepth = 2;
+    const agentRepeatLimit = 20;
     agent = new Agent(weights, agentPedictDepth, agentRepeatLimit);
     agentActivated = false;
 
@@ -65,6 +65,13 @@ function setup() {
         document.getElementById('newNumberAnimationDuration').innerText = this.value;
     });
     newScb.dispatchEvent(new Event('input'));
+
+    let agentScb = document.getElementById('agentPredictDepthScrollbar');
+    agentScb.addEventListener('input', function() {
+        agent.setPredictDepth(this.value);
+        document.getElementById('agentPredictDepth').innerText = this.value;
+    })
+    agentScb.dispatchEvent(new Event('input'));
 
     // checkbox
     let chkbox = document.getElementById('toggleBotCheckbox');
