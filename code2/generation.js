@@ -56,7 +56,7 @@ class Generation {
                 break;
             }
         }
-        if (selectedIdx.length == 0) selectedIdx.push(this.population - 1); // 실수 오차로 선택 안 됐을 때
+        if (selectedIdx.length == 0) selectedIdx.push(this.population - 1); // when nothing selected by rounding error
         
         // roulette wheel selection : second selection
         totalFitness -= fitnesses[selectedIdx[0]];
@@ -69,11 +69,10 @@ class Generation {
                 break;
             }
         }
-        if (selectedIdx.length == 1) { // 실수 오차로 선택 안 됐을 때
+        if (selectedIdx.length == 1) { // when nothing selected by rounding error
             if (selectedIdx[0] == this.population - 1) selectedIdx.push(this.population - 2);
             else selectedIdx.push(this.population - 1);
         }
-        print("scores", scores, "\nfitnesses", fitnesses, "\nselection", selectedIdx);
         
         // rank
         let indexes = [];
