@@ -41,13 +41,20 @@ function draw() {
 
     push(); translate(0, gui1Height);
         fill(0); textSize(13); textAlign(LEFT, BOTTOM);
-        if (generation.averageScore !== 'X') text("average score of the previous generation : " + generation.averageScore.toFixed(2), boardMargin, gui2Height);
+        if (generation.averageScore !== null) text("average score of the previous generation : " + generation.averageScore.toFixed(2), boardMargin, gui2Height);
     pop();
 
     push(); translate(generationWidth, gui1Height + gui2Height);
-    noFill(); stroke(0);
-    rect(0, 0, leftGuiWidth, generationHeight);
+        noFill(); stroke(0);
+        rect(0, 0, leftGuiWidth, generationHeight);
 
+        let leftGuiMargin = (leftGuiWidth - zoomScale * boardLength) / 2;
+        push(); translate(leftGuiMargin, leftGuiMargin);
+            if (generation.prevBestGame !== null) {
+                push(); scale(zoomScale);
+                    generation.prevBestGame.show();
+                pop();
+            }
+        pop();
     pop();
-
 }

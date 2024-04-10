@@ -6,7 +6,9 @@ class Generation {
     constructor(population) {
         this.century = 1;
         this.scoreHistory = [];
-        this.averageScore = 'X';
+        this.averageScore = null;
+
+        this.prevBestGame = null;
 
         this.population = population;
         this.individuals = [];
@@ -80,6 +82,7 @@ class Generation {
         indexes.sort((a, b) => {
             return this.individuals[a].getScore() - this.individuals[b].getScore();
         });
+        this.prevBestGame = this.individuals[indexes[this.population - 1]].game;
 
         // make new generation
         let chromosomes = [];
