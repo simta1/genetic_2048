@@ -10,7 +10,6 @@ class Agent {
         this.prevMove = null;
         this.repeatedUndoCnt = 0;
         this.blockRepeatUndo = false;
-        this.debugMode = false;
     }
 
     setPredictDepth(predictDepth) {
@@ -36,24 +35,17 @@ class Agent {
         if (bestMove === -1) {
             let possibleMoves = [Move.UP, Move.LEFT, Move.DOWN, Move.RIGHT];
             bestMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-            print("random move selected : ", bestMove);
         }
         game.applyMove(bestMove);
 
         // block to repeat undo forever
-        if (bestMove == Move.UNDO) {
-            if (this.prevPrevMove == Move.UNDO) {
-                if (++this.repeatedUndoCnt >= 100) {
-                    this.blockRepeatUndo = true;
-                    if (this.debugMode) print("blocked");
-                }
-            }
+        if (bestMove == Move.UNDO && this.prevPrevMove == Move.UNDO) {
+            if (++this.repeatedUndoCnt >= 100) this.blockRepeatUndo = true;
         }
         if (bestMove != Move.UNDO && this.prevMove != Move.UNDO) {
             this.repeatedUndoCnt = 0;
+            this.blockRepeatUndo = false;
         }
-
-        if (this.debugMode) print(bestMove, this.repeatedUndoCnt);
         
         this.prevPrevMove = this.prevMove;
         this.prevMove = bestMove;
