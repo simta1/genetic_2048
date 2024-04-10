@@ -121,6 +121,7 @@ class Generation {
 
         translate(0, gui2Height);
 
+        scale(zoomScale);
         let idx = 0;
         for (let i = 0; i < populHeight; i++) {
             for (let j = 0; j < populWidth; j++) {

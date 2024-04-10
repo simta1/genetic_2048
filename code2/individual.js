@@ -4,7 +4,7 @@ class Individual {
         for (let i = 0; i < size * size; i++) this.chromosome.push(1 - 2 * Math.random()); // random -1 ~ 1
 
         this.game = new Game();
-        this.agent = new Agent(this.chromosome, agentPedictDepth, agentRepeatLimit);
+        this.agent = new Agent(this.chromosome);
     }
 
     run() {
