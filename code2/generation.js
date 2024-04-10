@@ -111,17 +111,6 @@ class Generation {
     }
     
     show() {
-        fill(255, 0, 0); textSize(30); textAlign(CENTER, CENTER);
-        text(this.century + "th generation", width / 2, gui1Height / 2);
-
-        translate(0, gui1Height);
-
-        fill(0); textSize(13); textAlign(LEFT, BOTTOM);
-        if (this.averageScore !== 'X') text("average score of the previous generation : " + this.averageScore.toFixed(2), boardMargin, gui2Height);
-
-        translate(0, gui2Height);
-
-        scale(zoomScale);
         let idx = 0;
         for (let i = 0; i < populHeight; i++) {
             for (let j = 0; j < populWidth; j++) {
