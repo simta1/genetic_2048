@@ -329,7 +329,7 @@ class Game {
         
         // print score and time
         fill(0); textSize(10); textAlign(LEFT, CENTER);
-        text("SCORE : " + this.curScore + ", TIME : " + this.time.toFixed(2) + "s", 0, boardLength + 5);
+        text("SCORE : " + this.curScore + ", TIME : " + this.time.toFixed(2) + "s", 0, boardLength + 6);
 
         // check and draw game over screen
         if (this.gameover) {
