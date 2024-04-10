@@ -1,5 +1,5 @@
 class Agent {
-    constructor(weights, predictDepth=3, repeatLimit=3, undoThreshold=1.35) {
+    constructor(weights, predictDepth=3, repeatLimit=3, undoThreshold=1.25) {
         this.weights = weights;
         this.predictDepth = predictDepth;
         this.repeatLimit = repeatLimit; // number of checking makeNewNumber
