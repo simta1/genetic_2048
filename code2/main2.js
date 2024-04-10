@@ -6,7 +6,7 @@ let populWidth = 9;
 let populHeight = 6;
 
 // design
-const margin = 4;
+const margin = 4; // cellMargin
 const cellLength = 45;
 const curv = 3; // curvature
 const boardLength = margin + (cellLength + margin) * size;

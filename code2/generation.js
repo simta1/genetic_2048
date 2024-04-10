@@ -121,5 +121,38 @@ class Generation {
                 pop();
             }
         }
+
+        let indexes = [];
+        for (let i = 0; i < this.population; i++) indexes.push(i);
+        indexes.sort((a, b) => {
+            return this.individuals[a].getScore() - this.individuals[b].getScore();
+        });
+
+        let replacePopulation = this.population * replaceRate;
+        for (let i = 0; i < replacePopulation; i++) {
+            idx = indexes[i];
+            let x = boardMargin + (boardLength + boardMargin) * (idx % populWidth);
+            let y = boardMargin + (boardLength + boardMargin) * Math.floor(idx / populWidth);
+
+            push(); translate(x, y);
+                stroke('rgb(255, 0, 0)'); strokeWeight(4); fill(255, 0, 0, 50);
+                rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
+
+                fill(0); noStroke(); textSize(30); textAlign(CENTER, CENTER);
+                text((i + 1) + "th BAD", boardLength / 2, boardLength - margin - cellLength / 2);
+            pop();
+        }
+
+        idx = indexes[this.population - 1];
+        let x = boardMargin + (boardLength + boardMargin) * (idx % populWidth);
+        let y = boardMargin + (boardLength + boardMargin) * Math.floor(idx / populWidth);
+
+        push(); translate(x, y);
+            stroke('rgb(0, 255, 0)'); strokeWeight(5); fill(0, 255, 255, 100); // rgb(0, 255, 255)
+            rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
+            
+            fill(0); noStroke(); textSize(30); textAlign(CENTER, CENTER);
+            text("BEST", boardLength / 2, boardLength - margin - cellLength / 2);
+        pop();
     }
 }
