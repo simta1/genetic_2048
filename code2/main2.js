@@ -7,7 +7,7 @@ let populHeight = 3;
 
 // agent
 const agentPedictDepth = 2;
-const agentRepeatLimit = 8;
+const agentRepeatLimit = 20;
 
 // design
 const margin = 4;

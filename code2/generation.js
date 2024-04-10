@@ -93,9 +93,7 @@ class Generation {
             let chromosome = chromosomes[indexes[i]];
             
             // crossover
-            let idx = Math.floor(Math.random() * chromosome.length);
-            for (let i = 0; i < idx; i++) chromosome[i] = parentChromosome1[i];
-            for (let i = idx; i < chromosome.length; i++) chromosome[i] = parentChromosome2[i];
+            for (let i = 0; i < chromosome.length; i++) chromosome[i] = Math.random() < 0.5 ? parentChromosome1[i] : parentChromosome2[i];
 
             // mutation
             if (Math.random() < mutationProbability) {
