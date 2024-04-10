@@ -2,7 +2,7 @@ const size = 4;
 let generation;
 
 // population = populWidth * populHeight
-let populWidth = 3;
+let populWidth = 5;
 let populHeight = 3;
 
 // agent

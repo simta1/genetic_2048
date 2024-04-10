@@ -5,7 +5,9 @@ const mutationProbability = 0.2;
 class Generation {
     constructor(population) {
         this.century = 1;
-        this.averageScore = -1;
+        this.scoreHistory = [];
+        this.averageScore = 'X';
+
         this.population = population;
         this.individuals = [];
         for (let i = 0; i < population; i++) this.individuals.push(new Individual());
@@ -16,6 +18,7 @@ class Generation {
 
         if (this.individuals.every(individual => individual.isGameover())) {
             this.averageScore = this.individuals.reduce((acc, cur) => {return acc + cur.getScore();}, 0) / this.population;
+            this.scoreHistory.push(this.averageScore);
             this.evolve();
         }
     }
@@ -116,7 +119,7 @@ class Generation {
         translate(0, gui1Height);
 
         fill(0); textSize(13); textAlign(LEFT, BOTTOM);
-        if (~this.averageScore) text("average score of the previous generation : " + this.averageScore.toFixed(2), boardMargin, gui2Height);
+        if (this.averageScore !== 'X') text("average score of the previous generation : " + this.averageScore.toFixed(2), boardMargin, gui2Height);
 
         translate(0, gui2Height);
 
