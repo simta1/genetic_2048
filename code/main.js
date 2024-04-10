@@ -20,7 +20,7 @@ function setup() {
     boardLength = margin + (cellLength + margin) * size;
     createCanvas(boardLength, boardLength + 10);
     
-    // make weights for agent
+    // make weights for agent (greddy, no genetic)
     let weights = new Array(size * size).fill(0);
     let weight = 1;
     for (let i = 0; i < size; i++) {
@@ -39,7 +39,7 @@ function setup() {
             }
         }
     }
-    print(weights);
+    print("greddy weight", weights);
 
     // game
     game = new Game();
