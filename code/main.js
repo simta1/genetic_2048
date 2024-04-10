@@ -4,7 +4,7 @@ let agent;
 let agentActivated;
 
 // agent
-const agentPedictDepth = 3;
+const agentPedictDepth = 1;
 const agentRepeatLimit = 20;
 
 // design
@@ -75,17 +75,24 @@ function setup() {
 
 function draw() {
     background(255);
-    game.run();
-    game.show();
     if (agentActivated) agent.run(game);
+    game.run();
+    
+    game.show();
+    if (game.gameover) {
+        fill(0, 200); textSize(15); textAlign(CENTER, CENTER);
+        text('pree space to restart', width / 2 , height * 0.63);
+    }
 }
 
 function keyPressed() {
-    if (agentActivated) return;
-
-    if (keyCode == UP_ARROW) game.applyMove(Move.UP);
-    else if (keyCode == DOWN_ARROW) game.applyMove(Move.DOWN);
-    else if (keyCode == LEFT_ARROW) game.applyMove(Move.LEFT);
-    else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
-    else if (keyCode == BACKSPACE) game.applyMove(Move.UNDO);
+    if (!agentActivated) {
+        if (keyCode == UP_ARROW) game.applyMove(Move.UP);
+        else if (keyCode == DOWN_ARROW) game.applyMove(Move.DOWN);
+        else if (keyCode == LEFT_ARROW) game.applyMove(Move.LEFT);
+        else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
+        else if (keyCode == BACKSPACE) game.applyMove(Move.UNDO);
+    }
+    
+    if (key == ' ' && game.gameover) game = new Game();
 }
