@@ -29,10 +29,25 @@
       <label for="newNumberAnimationScrollbar">Creating Animation Duration: <span id="newNumberAnimationDuration"></span></label>
       <input type="range" min="0" max="100" value="5" id="newNumberAnimationScrollbar">
     </div>
+
+    </br>
+
+    <div>
+      <label for="agentUndoThresholdScrollbar">Bot Undo Threshold: <span id="agentUndoThreshold"></span></label>
+      <input type="range" min="105" max="300" value="125" id="agentUndoThresholdScrollbar">
+    </div>
     <div>
       <label for="agentPredictDepthScrollbar">Bot Predict Depth: <span id="agentPredictDepth"></span></label>
       <input type="range" min="2" max="3" value="3" id="agentPredictDepthScrollbar">
     </div>
+    
+    </br>
+
+    <div style="font-size: 10px;">
+      <span>The lower threshold is, the more frequently bot undoes.</span></br>
+      <span>The smaller the threshold and the larger the prediction depth, the better the performance of the bot.</span>
+    </div>
+
     </br><div>
       <label for="toggleBotCheckbox">Activate Bot</label>
       <input type="checkbox" id="toggleBotCheckbox">

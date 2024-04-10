@@ -204,6 +204,10 @@ class Game {
             this.curScore = this.prevScore;
             this.canUndo = false;
             break;
+
+        default:
+            print("Unknown move");
+            return;
         }
 
         // move animation start

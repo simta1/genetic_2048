@@ -45,9 +45,7 @@ function setup() {
     game = new Game();
 
     // agent
-    const agentPedictDepth = 2;
-    const agentRepeatLimit = 20;
-    agent = new Agent(weights, agentPedictDepth, agentRepeatLimit);
+    agent = new Agent(weights);
     agentActivated = false;
 
     // scrollbar
@@ -67,12 +65,20 @@ function setup() {
     newScb.dispatchEvent(new Event('input'));
 
     // scrollbar
-    let agentScb = document.getElementById('agentPredictDepthScrollbar');
-    agentScb.addEventListener('input', function() {
+    let depthScb = document.getElementById('agentPredictDepthScrollbar');
+    depthScb.addEventListener('input', function() {
         agent.setPredictDepth(this.value);
         document.getElementById('agentPredictDepth').innerText = this.value;
-    })
-    agentScb.dispatchEvent(new Event('input'));
+    });
+    depthScb.dispatchEvent(new Event('input'));
+
+    // scrollbar
+    let undoScb = document.getElementById('agentUndoThresholdScrollbar');
+    undoScb.addEventListener('input', function() {
+        agent.setUndoThreshold(this.value / 100);
+        document.getElementById('agentUndoThreshold').innerText = this.value / 100;
+    });
+    undoScb.dispatchEvent(new Event('input'));
 
     // checkbox
     let chkbox = document.getElementById('toggleBotCheckbox');
