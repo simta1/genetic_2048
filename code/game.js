@@ -276,8 +276,8 @@ class Game {
         fill('rgb(204, 192, 179)');
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
-                let x = margin + (cellLength + margin) * j;
-                let y = margin + (cellLength + margin) * i;
+                let x = cellMargin + (cellLength + cellMargin) * j;
+                let y = cellMargin + (cellLength + cellMargin) * i;
                 rect(x, y, cellLength, cellLength, curv, curv, curv, curv);
             }
         }
@@ -287,14 +287,14 @@ class Game {
             for (let j = 0; j < size; j++) {
                 if (this.curBoard[i][j] == 0) continue;
 
-                let x = margin + (cellLength + margin) * j;
-                let y = margin + (cellLength + margin) * i;
+                let x = cellMargin + (cellLength + cellMargin) * j;
+                let y = cellMargin + (cellLength + cellMargin) * i;
 
                 if (this.applyMoveTimer.isWorking()) {
                     let {i : mi, j : mj} = this.movedPos[i][j];
                     let rate = this.applyMoveTimer.elapsedRate();
-                    x = margin + (cellLength + margin) * map(rate, 0, 1, j, mj);
-                    y = margin + (cellLength + margin) * map(rate, 0, 1, i, mi);
+                    x = cellMargin + (cellLength + cellMargin) * map(rate, 0, 1, j, mj);
+                    y = cellMargin + (cellLength + cellMargin) * map(rate, 0, 1, i, mi);
                 }
                 
                 // draw background of each number

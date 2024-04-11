@@ -4,7 +4,7 @@ let agent;
 let agentActivated;
 
 // design
-const margin = 4;
+const cellMargin = 4;
 const cellLength = 45;
 const curv = 3; // curvature
 let boardLength;
@@ -17,7 +17,7 @@ function setup() {
     else size = 4; // default
 
     // calculate total length of game screen
-    boardLength = margin + (cellLength + margin) * size;
+    boardLength = cellMargin + (cellLength + cellMargin) * size;
     createCanvas(boardLength, boardLength + 10);
     
     // make weights for agent (greddy, no genetic)

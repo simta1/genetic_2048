@@ -142,7 +142,7 @@ class Generation {
                 rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
 
                 fill(0); noStroke(); textSize(30); textAlign(CENTER, CENTER);
-                text((i + 1) + "th BAD", boardLength / 2, boardLength - margin - cellLength / 2);
+                text((i + 1) + "th BAD", boardLength / 2, boardLength - cellMargin - cellLength / 2);
             pop();
         }
 
@@ -155,7 +155,7 @@ class Generation {
             rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
             
             fill(0); noStroke(); textSize(30); textAlign(CENTER, CENTER);
-            text("BEST", boardLength / 2, boardLength - margin - cellLength / 2);
+            text("BEST", boardLength / 2, boardLength - cellMargin - cellLength / 2);
         pop();
     }
 }
