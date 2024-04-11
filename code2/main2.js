@@ -22,6 +22,7 @@ const bottomAdditionalMargin = 30;
 const leftGuiWidth = 200;
 const leftGuiMargin = 2;
 const leftGuiTextHeight = 20;
+const leftGuiExplainTopMargin = 40;
 
 function setup() {
     createCanvas(generationWidth + leftGuiWidth, gui1Height + gui2Height + generationHeight + bottomAdditionalMargin);
@@ -66,6 +67,12 @@ function draw() {
                 fill(0, 100); strokeWeight(0.1); textSize(30); textAlign(CENTER, CENTER);
                 text("no previous\ngeneration", boardLength / 2, boardLength / 2);
             }
+        pop();
+
+        // show explain
+        push(); translate(0, leftGuiTextHeight + leftGuiMargin + (boardLength + boardMargin) * curScale + leftGuiExplainTopMargin);
+            fill(0); textSize(13); textAlign(LEFT, TOP);
+            text("press h to view score history\npress w to view chromosomes", leftGuiMargin, 0);
         pop();
     pop();
 }
