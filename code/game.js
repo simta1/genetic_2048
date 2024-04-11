@@ -200,6 +200,8 @@ class Game {
             break;
         
         case Move.UNDO:
+            if (!this.canUndo) return;
+
             this.curBoard = this.prevBoard;
             this.curScore = this.prevScore;
             this.canUndo = false;
@@ -269,7 +271,8 @@ class Game {
         noStroke();
 
         // draw background of game board
-        fill('rgb(187, 173, 160)');
+        if (this.canUndo) fill('rgb(187, 173, 160)');
+        else fill('rgb(230, 143, 130)');
         rect(0, 0, boardLength, boardLength, curv, curv, curv, curv);
 
         // draw background of each room
