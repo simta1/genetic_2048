@@ -26,6 +26,7 @@ class Generation {
         if (this.individuals.every(individual => individual.isGameover())) {
             this.averageScore = this.individuals.reduce((acc, cur) => {return acc + cur.getScore();}, 0) / this.population;
             this.scoreHistory.push(this.averageScore);
+            scoreGraph.addPoint(this.century, this.averageScore);
             this.evolve();
         }
     }

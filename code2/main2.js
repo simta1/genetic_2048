@@ -1,5 +1,6 @@
 const size = 4;
 let generation;
+let scoreGraph;
 
 // population = populWidth * populHeight
 let populWidth = 9;
@@ -29,6 +30,12 @@ function setup() {
     
     // make generation
     generation = new Generation(populWidth * populHeight);
+
+    // score history graph
+    scoreGraph = new GPlot(this, 0, 0, width, height);
+    scoreGraph.setTitleText("score history");
+    scoreGraph.getXAxis().setAxisLabelText("generation");
+    scoreGraph.getYAxis().setAxisLabelText("score");
 }
 
 function draw() {
@@ -75,4 +82,11 @@ function draw() {
             text("press h to view score history\npress w to view chromosomes", leftGuiMargin, 0);
         pop();
     pop();
+
+    // show score history
+    if (keyIsPressed && key == 'h') {
+        fill(255, 230);
+        rect(0, 0, width, height); // background
+        scoreGraph.defaultDraw();
+    }
 }
