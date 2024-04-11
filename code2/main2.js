@@ -55,12 +55,12 @@ function draw() {
 
     // show gui1 : "x th generation"
     fill(255, 0, 0); textSize(30); textAlign(CENTER, CENTER);
-    text(generation.century + "th generation", width / 2, gui1Height / 2);
+    text(`${generation.century}th generation`, width / 2, gui1Height / 2);
 
     // show gui2 : "average score of the previous generation : x"
     push(); translate(0, gui1Height);
         fill(0); textSize(13); textAlign(LEFT, BOTTOM);
-        if (generation.averageScore !== null) text("average score of the previous generation : " + generation.averageScore.toFixed(2), boardMargin, gui2Height);
+        if (generation.averageScore !== null) text(`average score of the previous generation : ${generation.averageScore.toFixed(2)}`, boardMargin, gui2Height);
     pop();
 
     // show left gui
