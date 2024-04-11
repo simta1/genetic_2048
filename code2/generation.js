@@ -8,7 +8,12 @@ class Generation {
         this.scoreHistory = [];
         this.averageScore = null;
 
-        this.prevBestGame = null;
+        this.prevBestGame = new Game();
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                this.prevBestGame.curBoard[i][j] = 0;
+            }
+        }
 
         this.population = population;
         this.individuals = [];
