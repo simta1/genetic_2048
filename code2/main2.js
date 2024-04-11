@@ -1,6 +1,7 @@
 const size = 4;
 let generation;
-let scoreGraph;
+let averageScoreGraph;
+let bestScoreGraph;
 
 // population = populWidth * populHeight
 let populWidth = 9;
@@ -32,10 +33,15 @@ function setup() {
     generation = new Generation(populWidth * populHeight);
 
     // score history graph
-    scoreGraph = new GPlot(this, 0, 0, width, height);
-    scoreGraph.setTitleText("score history");
-    scoreGraph.getXAxis().setAxisLabelText("generation");
-    scoreGraph.getYAxis().setAxisLabelText("score");
+    averageScoreGraph = new GPlot(this, 0, 0, width, height / 2);
+    averageScoreGraph.setTitleText("average score");
+    averageScoreGraph.getXAxis().setAxisLabelText("generation");
+    averageScoreGraph.getYAxis().setAxisLabelText("score");
+
+    bestScoreGraph = new GPlot(this, 0, height / 2, width, height / 2);
+    bestScoreGraph.setTitleText("best score");
+    bestScoreGraph.getXAxis().setAxisLabelText("generation");
+    bestScoreGraph.getYAxis().setAxisLabelText("score");
 }
 
 function draw() {
@@ -87,6 +93,7 @@ function draw() {
     if (keyIsPressed && key == 'h') {
         fill(255, 230);
         rect(0, 0, width, height); // background
-        scoreGraph.defaultDraw();
+        averageScoreGraph.defaultDraw();
+        bestScoreGraph.defaultDraw();
     }
 }

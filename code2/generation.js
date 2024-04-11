@@ -25,8 +25,11 @@ class Generation {
 
         if (this.individuals.every(individual => individual.isGameover())) {
             this.averageScore = this.individuals.reduce((acc, cur) => {return acc + cur.getScore();}, 0) / this.population;
-            this.scoreHistory.push(this.averageScore);
-            scoreGraph.addPoint(this.century, this.averageScore);
+            let curBestScore = this.individuals.reduce((acc, cur) => {return max(acc, cur.getScore());}, -Infinity);
+            this.scoreHistory.push([this.averageScore, curBestScore]);
+            averageScoreGraph.addPoint(this.century, this.averageScore);
+            bestScoreGraph.addPoint(this.century, curBestScore);
+            
             this.evolve();
         }
     }
