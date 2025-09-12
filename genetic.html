@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>genetic algorithm</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-genetic">
+    <header class="site-header">
+        <div class="container header-inner">
+            <h1 class="brand">Bot Learning</h1>
+            <a class="nav-link edge-link" href="index.html">Play 2048</a>
+        </div>
+    </header>
+
+    <main class="container content">
+        <!-- <section class="panel stage stage--full stage--scroll">
+            <div id="p5-root" class="stage-inner"></div>
+        </section> -->
+        <!-- <div id="p5-root"></div> -->
+        <div class="panel-skin">
+            <div id="p5-root"></div>
+        </div>
+    </main>
 
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/grafica.min.js"></script>
-  </head>
-
-  <body>
-    <a href="index.html">play 2048</a></br>
 
     <script src="src/main/agent.js"></script>
     <script src="src/main/game.js"></script>
@@ -22,6 +36,5 @@
     <script src="src/genetic/generation.js"></script>
     <script src="src/genetic/individual.js"></script>
     <script src="src/genetic/sketch.js"></script>
-  </div>
-  </body>
+</body>
 </html>

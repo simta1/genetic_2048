@@ -1,4 +1,2 @@
 # genetic_2048
-2048 bot by genetic algorithm
-
-p5.js
+https://simta1.github.io/genetic_2048/genetic.html   

@@ -1,75 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>2048</title>
-    <style>
-      #agentPredictDepthScrollbar {
-        width: 30px;
-      }
-    </style>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        (function () { // size 파라미터 리로드 없이 주입
+            var params = new URLSearchParams(location.search);
+            if (!params.has('size')) {
+                params.set('size', '4');
+                var next = location.pathname + '?' + params.toString() + location.hash;
+                history.replaceState(null, '', next);
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <h1 class="brand">2048</h1>
+            <nav class="nav">
+                <button id="openSettingsBtn" class="btn icon" type="button"
+                        aria-label="Settings" aria-haspopup="dialog" aria-controls="settingsDialog">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18M3 12h18M3 18h18"
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <div class="divider" aria-hidden="true"></div>
+
+                <div class="segmented" role="tablist" aria-label="Board size">
+                    <a role="tab" class="segmented-item" href="index.html?size=3" data-size="3">3x3</a>
+                    <a role="tab" class="segmented-item" href="index.html?size=4" data-size="4">4x4</a>
+                    <a role="tab" class="segmented-item" href="index.html?size=5" data-size="5">5x5</a>
+                    <a role="tab" class="segmented-item" href="index.html?size=6" data-size="6">6x6</a>
+                </div>
+            </nav>
+
+            <a class="nav-link edge-link" href="genetic.html">Watch AI Train</a>
+        </div>
+    </header>
+
+    <main class="container content">
+        <section class="stage panel">
+            <div id="p5-root" class="stage-inner"></div>
+        </section>
+
+        <section class="panel">
+            <div class="controls">
+                <button id="undoBtn" class="btn" type="button">Undo</button>
+                    
+                <label class="switch" title="Activate Bot">
+                    <input type="checkbox" id="toggleBotCheckbox">
+                    <span class="slider" aria-hidden="true"></span>
+                    <span class="switch-text">Activate Bot</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="panel">
+            <header class="panel-head">
+                <h2 class="panel-title">How to Play</h2>
+            </header>
+
+            <ul class="howto">
+                <li>타일 이동: <kbd>↑</kbd>/<kbd>↓</kbd>/<kbd>←</kbd>/<kbd>→</kbd> 또는 <kbd>W</kbd>/<kbd>A</kbd>/<kbd>S</kbd>/<kbd>D</kbd></li>
+                <li>되돌리기(undo): <kbd>Backspace</kbd> 또는 <kbd>Z</kbd></li>
+                <li>재시작: <kbd>Space</kbd> (게임오버 시)</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Settings 모달 -->
+    <dialog id="settingsDialog" class="modal">
+        <form method="dialog" class="modal-card">
+            <header class="modal-head">
+                <h3 class="modal-title">Settings</h3>
+                <button value="close" class="btn icon" title="Close" aria-label="Close">✕</button>
+            </header>
+
+            <div class="modal-body">
+                <div class="controls-grid">
+                    <div class="control">
+                        <label class="control-label" for="moveAnimationScrollbar">
+                            Pushing Animation Duration
+                            <span class="readout" id="moveAnimationDuration"></span>
+                        </label>
+                        <input class="range" type="range" min="0" max="100" value="5" id="moveAnimationScrollbar" />
+                    </div>
+
+                    <div class="control">
+                        <label class="control-label" for="newNumberAnimationScrollbar">
+                            Creating Animation Duration
+                            <span class="readout" id="newNumberAnimationDuration"></span>
+                        </label>
+                        <input class="range" type="range" min="0" max="100" value="5" id="newNumberAnimationScrollbar" />
+                    </div>
+
+                    <div class="control">
+                        <label class="control-label" for="agentUndoThresholdScrollbar">
+                            Bot Undo Threshold
+                            <span class="readout" id="agentUndoThreshold"></span>
+                        </label>
+                        <input class="range" type="range" min="105" max="300" value="125" id="agentUndoThresholdScrollbar" />
+                    </div>
+
+                    <div class="control">
+                        <label class="control-label" for="agentPredictDepthScrollbar">
+                            Bot Predict Depth
+                            <span class="readout" id="agentPredictDepth"></span>
+                        </label>
+                        <input class="range" type="range" min="2" max="3" value="3" id="agentPredictDepthScrollbar" />
+                    </div>
+                </div>
+
+                <p class="hint">
+                    Lower threshold → bot undoes more often. Smaller threshold + deeper prediction → stronger bot (usually).
+                </p>
+            </div>
+
+            <footer class="modal-foot">
+                <button class="btn primary" value="close">Done</button>
+            </footer>
+        </form>
+    </dialog>
 
     <script src="libraries/p5.min.js"></script>
-  </head>
-
-  <body>
-    <h2>add URL parameter 'size' to change size of game board.</h2>
-    </br></br>
-
-    <div>
-      <label for="moveAnimationScrollbar">Pushing Animation Duration: <span id="moveAnimationDuration"></span></label>
-      <input type="range" min="0" max="100" value="5" id="moveAnimationScrollbar">
-    </div>
-    <div>
-      <label for="newNumberAnimationScrollbar">Creating Animation Duration: <span id="newNumberAnimationDuration"></span></label>
-      <input type="range" min="0" max="100" value="5" id="newNumberAnimationScrollbar">
-    </div>
-
-    </br>
-
-    <div>
-      <label for="agentUndoThresholdScrollbar">Bot Undo Threshold: <span id="agentUndoThreshold"></span></label>
-      <input type="range" min="105" max="300" value="125" id="agentUndoThresholdScrollbar">
-    </div>
-    <div>
-      <label for="agentPredictDepthScrollbar">Bot Predict Depth: <span id="agentPredictDepth"></span></label>
-      <input type="range" min="2" max="3" value="3" id="agentPredictDepthScrollbar">
-    </div>
-    
-    </br>
-
-    <div style="font-size: 10px;">
-      <span>The lower threshold is, the more frequently bot undoes.</span></br>
-      <span>The smaller the threshold and the larger the prediction depth, the better the performance of the bot.</span>
-    </div>
-
-    </br><div>
-      <label for="toggleBotCheckbox">Activate Bot</label>
-      <input type="checkbox" id="toggleBotCheckbox">
-    </div>
-
-    <a href="genetic.html">watch bot learning</a></br>
 
     <script src="src/main/agent.js"></script>
     <script src="src/main/game.js"></script>
     <script src="src/main/timer.js"></script>
     <script src="src/main/sketch.js"></script>
+
     <script>
-      window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sizeParam = urlParams.get('size');
-        if (!sizeParam) {
-          var url = window.location.href;
-          if (url.indexOf('?') !== -1) url += '&size=4';
-          else url += '?size=4';
-          window.location.href = url;
-        }
-      };
+        (function () {
+            // size 강조
+            var params = new URLSearchParams(location.search);
+            var size = params.get('size');
+            document.querySelectorAll('.segmented-item').forEach(function (el) {
+                if (el.getAttribute('data-size') === size) el.setAttribute('aria-current', 'page');
+                else el.removeAttribute('aria-current');
+            });
+
+            // Settings 모달
+            var dlg = document.getElementById('settingsDialog');
+            var openBtn = document.getElementById('openSettingsBtn');
+            if (openBtn && dlg && typeof dlg.showModal === 'function') {
+                openBtn.addEventListener('click', function () { dlg.showModal(); });
+                dlg.addEventListener('click', function (e) {
+                    var card = dlg.querySelector('.modal-card');
+                    var rect = card.getBoundingClientRect();
+                    var inDialog = e.clientX >= rect.left && e.clientX <= rect.right &&
+                                   e.clientY >= rect.top && e.clientY <= rect.bottom;
+                    if (!inDialog) dlg.close('backdrop');
+                });
+            }
+        })();
     </script>
-  </div>
-  </body>
+</body>
 </html>

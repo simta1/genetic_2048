@@ -27,7 +27,7 @@ const leftGuiTextHeight = 20;
 const leftGuiExplainTopMargin = 40;
 
 function setup() {
-    createCanvas(generationWidth + leftGuiWidth, gui1Height + gui2Height + generationHeight + bottomAdditionalMargin);
+    createCanvas(generationWidth + leftGuiWidth, gui1Height + gui2Height + generationHeight + bottomAdditionalMargin).parent('p5-root');
     
     // make generation
     generation = new Generation(populWidth * populHeight);
@@ -85,13 +85,13 @@ function draw() {
         // show explain
         push(); translate(0, leftGuiTextHeight + leftGuiMargin + (boardLength + boardMargin) * curScale + leftGuiExplainTopMargin);
             fill(0); textSize(13); textAlign(LEFT, TOP);
-            text("press h to view score history", leftGuiMargin, 0);
+            text("Press H to see the score history", leftGuiMargin, 0);
             // text("press h to view score history\npress w to view chromosomes", leftGuiMargin, 0);
         pop();
     pop();
 
     // show score history
-    if (keyIsPressed && key == 'h') {
+    if (keyIsPressed && (key == 'h' || key == 'H')) {
         fill(255, 230);
         rect(0, 0, width, height); // background
         averageScoreGraph.defaultDraw();

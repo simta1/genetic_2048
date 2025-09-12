@@ -18,7 +18,7 @@ function setup() {
 
     // calculate total length of game screen
     boardLength = cellMargin + (cellLength + cellMargin) * size;
-    createCanvas(boardLength, boardLength + 10);
+    createCanvas(boardLength, boardLength + 10).parent('p5-root');
     
     // make weights for agent (greddy, no genetic)
     let weights = new Array(size * size).fill(0);
@@ -85,6 +85,14 @@ function setup() {
     chkbox.addEventListener('change', function() {
         agentActivated = !agentActivated;
     });
+    
+    // undo button
+    let undoBtn = document.getElementById('undoBtn');
+    undoBtn.addEventListener('click', function() {
+        if (!agentActivated) {
+            game.applyMove(Move.UNDO);
+        }
+    });
 }
 
 function draw() {
@@ -95,18 +103,41 @@ function draw() {
     game.show();
     if (game.gameover) {
         fill(0, 200); textSize(15); textAlign(CENTER, CENTER);
-        text('pree space to restart', width / 2 , height * 0.63);
+        text('press R to restart', width / 2 , height * 0.63);
     }
 }
 
 function keyPressed() {
     if (!agentActivated) {
-        if (keyCode == UP_ARROW) game.applyMove(Move.UP);
-        else if (keyCode == DOWN_ARROW) game.applyMove(Move.DOWN);
-        else if (keyCode == LEFT_ARROW) game.applyMove(Move.LEFT);
-        else if (keyCode == RIGHT_ARROW) game.applyMove(Move.RIGHT);
-        else if (keyCode == BACKSPACE) game.applyMove(Move.UNDO);
+        if (keyCode == UP_ARROW || key == 'w') game.applyMove(Move.UP);
+        else if (keyCode == DOWN_ARROW || key == 's') game.applyMove(Move.DOWN);
+        else if (keyCode == LEFT_ARROW || key == 'a') game.applyMove(Move.LEFT);
+        else if (keyCode == RIGHT_ARROW || key == 'd') game.applyMove(Move.RIGHT);
+        else if (keyCode == BACKSPACE || key == 'z') game.applyMove(Move.UNDO);
     }
     
-    if (key == ' ' && game.gameover) game = new Game();
+    if ((key == 'r' || key == 'R') && game.gameover) game = new Game();
+}
+
+let touchStartX, touchStartY;
+
+function touchStarted() {
+    touchStartX = mouseX;
+    touchStartY = mouseY;
+}
+
+function touchEnded() {
+    let dx = mouseX - touchStartX;
+    let dy = mouseY - touchStartY;
+
+    if (!agentActivated) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 30) game.applyMove(Move.RIGHT);
+            else if (dx < -30) game.applyMove(Move.LEFT);
+        }
+        else {
+            if (dy > 30) game.applyMove(Move.DOWN);
+            else if (dy < -30) game.applyMove(Move.UP);
+        }
+    }
 }
