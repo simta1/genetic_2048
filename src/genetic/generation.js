@@ -2,6 +2,11 @@ const selectionPressure = 3;
 const replaceRate = 0.3;
 const mutationProbability = 0.2;
 
+const eliteRate = 0.05;
+const geneMutationRate = 0.10;
+const mutationStep = 0.10;
+const clampMin = -1.0, clampMax = 1.0;
+
 class Generation {
     constructor(population) {
         this.century = 1;
@@ -35,84 +40,71 @@ class Generation {
     }
 
     evolve() {
-        // get scores from individuals
-        let scores = [];
-        for (let individual of this.individuals) scores.push(individual.getScore());
-        
-        // calculate fitness
-        let worstScore = Infinity;
-        let bestScore = -Infinity;
-        for (let individual of this.individuals) {
-            worstScore = min(worstScore, individual.getScore());
-            bestScore = max(bestScore, individual.getScore());
+        const scores = this.individuals.map(ind => ind.getScore());
+
+        let worstScore = Infinity, bestScore = -Infinity;
+        for (let s of scores) {
+            if (s < worstScore) worstScore = s;
+            if (s > bestScore) bestScore = s;
         }
 
         let fitnesses = [];
-        for (let individual of this.individuals) {
-            let fitness = (individual.getScore() - worstScore) + (bestScore - worstScore) / (selectionPressure - 1);
-            fitnesses.push(fitness);
+        if (bestScore === worstScore) {
+            fitnesses = new Array(this.population).fill(1);
+        }
+        else {
+            const base = (bestScore - worstScore) / (selectionPressure - 1);
+            for (let i = 0; i < this.population; i++) fitnesses.push((scores[i] - worstScore) + base);
         }
 
-        // roulette wheel selection
-        let selectedIdx = [];
+        const indexes = Array.from({ length: this.population }, (_, i) => i)
+            .sort((a, b) => this.individuals[a].getScore() - this.individuals[b].getScore());
 
-        // roulette wheel selection : first selection
-        let totalFitness = fitnesses.reduce((acc, cur) => { return acc + cur }, 0);
-        let spin = Math.random() * totalFitness;
-        let currentSum = 0;
-        for (let i = 0; i < this.population; i++) {
-            currentSum += fitnesses[i];
-            if (spin < currentSum) {
-                selectedIdx.push(i);
-                break;
-            }
-        }
-        if (selectedIdx.length == 0) selectedIdx.push(this.population - 1); // when nothing selected by rounding error
-        
-        // roulette wheel selection : second selection
-        totalFitness -= fitnesses[selectedIdx[0]];
-        spin = Math.random() * totalFitness;
-        currentSum = 0;
-        for (let i = 0; i < this.population; i++) if (i != selectedIdx[0]) {
-            currentSum += fitnesses[i];
-            if (spin < currentSum) {
-                selectedIdx.push(i);
-                break;
-            }
-        }
-        if (selectedIdx.length == 1) { // when nothing selected by rounding error
-            if (selectedIdx[0] == this.population - 1) selectedIdx.push(this.population - 2);
-            else selectedIdx.push(this.population - 1);
-        }
-        
-        // rank
-        let indexes = [];
-        for (let i = 0; i < this.population; i++) indexes.push(i);
-        indexes.sort((a, b) => {
-            return this.individuals[a].getScore() - this.individuals[b].getScore();
-        });
         this.prevBestGame = this.individuals[indexes[this.population - 1]].game;
 
-        // make new generation
-        let chromosomes = [];
-        for (let individual of this.individuals) chromosomes.push(individual.getChromosome());
-        let parentChromosome1 = chromosomes[selectedIdx[0]].slice();
-        let parentChromosome2 = chromosomes[selectedIdx[1]].slice();
+        const eliteCount = Math.max(1, Math.floor(this.population * eliteRate));
+        const elites = indexes.slice(this.population - eliteCount); // 상위 인덱스들
 
-        let replacePopulation = this.population * replaceRate;
-        for (let i = 0; i < replacePopulation; i++) {
-            let chromosome = chromosomes[indexes[i]];
-            
-            // crossover
-            for (let i = 0; i < chromosome.length; i++) chromosome[i] = Math.random() < 0.5 ? parentChromosome1[i] : parentChromosome2[i];
+        const chromosomes = this.individuals.map(ind => ind.getChromosome());
 
-            // mutation
-            if (Math.random() < mutationProbability) {
-                for (let i = 0; i < chromosome.length; i++) {
-                    chromosome[i] += 0.1 - 0.2 * Math.random() // random -0.1 ~ 0.1
-                    chromosome[i] = constrain(chromosome[i], -1, 1);
-                }
+        const pickByRoulette = () => {
+            const total = fitnesses.reduce((a, b) => a + b, 0);
+            let r = Math.random() * total;
+            for (let i = 0; i < fitnesses.length; i++) {
+                r -= fitnesses[i];
+                if (r <= 0) return i;
             }
+            return this.population - 1; // fallback
+        };
+
+        const replaceCount = Math.floor(this.population * replaceRate);
+        const victims = indexes.slice(0, replaceCount);
+
+        for (let victim of victims) {
+            const p1 = pickByRoulette();
+            let p2 = pickByRoulette();
+            if (p1 === p2) p2 = (p2 + 1) % this.population;
+
+            const a = chromosomes[p1];
+            const b = chromosomes[p2];
+            const child = new Array(a.length);
+
+            for (let g = 0; g < child.length; g++) {
+                let gene = Math.random() < 0.5 ? a[g] : b[g];
+                if (Math.random() < geneMutationRate) {
+                    gene += (Math.random() * 2 - 1) * mutationStep;
+                }
+                if (gene < clampMin) gene = clampMin;
+                if (gene > clampMax) gene = clampMax;
+                child[g] = gene;
+            }
+
+            chromosomes[victim] = child;
+        }
+
+        for (let i = 0; i < eliteCount; i++) {
+            const idx = elites[i];
+            chromosomes[idx] = chromosomes[idx].slice();
         }
 
         for (let i = 0; i < this.population; i++) {
@@ -140,7 +132,7 @@ class Generation {
             return this.individuals[a].getScore() - this.individuals[b].getScore();
         });
 
-        let replacePopulation = this.population * replaceRate;
+        const replacePopulation = Math.floor(this.population * replaceRate);
         for (let i = 0; i < replacePopulation; i++) {
             idx = indexes[i];
             let x = boardMargin + (boardLength + boardMargin) * (idx % populWidth);
