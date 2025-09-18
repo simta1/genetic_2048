@@ -24,22 +24,20 @@
         <div class="container header-inner">
             <h1 class="brand">2048</h1>
             <nav class="nav">
-                <button id="openSettingsBtn" class="btn icon" type="button"
-                        aria-label="Settings" aria-haspopup="dialog" aria-controls="settingsDialog">
-                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M3 6h18M3 12h18M3 18h18"
-                              stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-
-                <div class="divider" aria-hidden="true"></div>
-
                 <div class="segmented" role="tablist" aria-label="Board size">
                     <a role="tab" class="segmented-item" href="index.html?size=3" data-size="3">3x3</a>
                     <a role="tab" class="segmented-item" href="index.html?size=4" data-size="4">4x4</a>
                     <a role="tab" class="segmented-item" href="index.html?size=5" data-size="5">5x5</a>
                     <a role="tab" class="segmented-item" href="index.html?size=6" data-size="6">6x6</a>
                 </div>
+
+                <button id="openSettingsBtn" class="btn icon" type="button"
+                        aria-label="Settings" aria-haspopup="dialog" aria-controls="settingsDialog">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6h18M3 12h18M3 18h18"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </nav>
 
             <a class="nav-link edge-link" href="genetic.html">Watch AI Train</a>

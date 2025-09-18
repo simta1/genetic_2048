@@ -13,11 +13,11 @@ class Agent {
     }
 
     setPredictDepth(predictDepth) {
-        this.predictDepth = predictDepth;
+        this.predictDepth = Number(predictDepth);
     }
 
     setUndoThreshold(undoThreshold) {
-        this.undoThreshold = undoThreshold;
+        this.undoThreshold = Number(undoThreshold);
     }
 
     run(game) {

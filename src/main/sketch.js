@@ -46,7 +46,6 @@ function setup() {
 
     // agent
     agent = new Agent(weights);
-    agentActivated = false;
 
     // scrollbar
     let moveScb = document.getElementById('moveAnimationScrollbar');
@@ -82,8 +81,9 @@ function setup() {
 
     // checkbox
     let chkbox = document.getElementById('toggleBotCheckbox');
+    agentActivated = chkbox.checked;
     chkbox.addEventListener('change', function() {
-        agentActivated = !agentActivated;
+        agentActivated = this.checked;
     });
     
     // undo button
